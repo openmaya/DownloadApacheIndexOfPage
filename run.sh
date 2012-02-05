@@ -25,7 +25,7 @@ function downloadSite () {
 		rm index.html
 	fi
 	echo "# download $1 index.html"
-	wget $1
+	curl -o index.html $1
 	if [ -e index.html ]; then
 		for file in $(cat ./index.html | sed -ne "s/.*A HREF=\"\(.*\..*\)\".*/\1/p")
 		do
@@ -35,7 +35,7 @@ function downloadSite () {
 				echo "rm $FILE_URL"
 				rm $file
 			fi
-			wget $FILE_URL
+			curl -O $FILE_URL
 		done
 		echo "### print directory list and call $0 $1[DIRECTORY] $2[DIRECTORY]"
 		for dir in $(cat ./index.html | sed -ne "s/.*A HREF=\"\([^\/]*\/\)\".*/\1/p")
@@ -46,7 +46,7 @@ function downloadSite () {
 	else
 		echo "$1/index.html is not found(maybe 404 return)"
 	fi
-	echo "# rm $(pwd)index.html"
+	echo "# rm $(pwd) index.html"
 	rm index.html
 	cd ..
 	echo "### change parent directory dir=$(pwd)"
