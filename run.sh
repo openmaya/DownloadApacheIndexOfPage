@@ -27,7 +27,7 @@ function downloadSite () {
 	echo "# download $1 index.html"
 	curl -o index.html $1
 	if [ -e index.html ]; then
-		for file in $(cat ./index.html | sed -ne "s/.*A HREF=\"\(.*\..*\)\".*/\1/p")
+		for file in $(cat ./index.html | sed -ne "/<pre>/,/<\/pre>/s/.*\(A HREF\|a href\)=\"\([^>]*\.[^>]*\)\".*/\2/p")
 		do
 			FILE_URL="$1$file"
 			echo "# download :: $FILE_URL";
@@ -38,7 +38,7 @@ function downloadSite () {
 			curl -O $FILE_URL
 		done
 		echo "### print directory list and call $0 $1[DIRECTORY] $2[DIRECTORY]"
-		for dir in $(cat ./index.html | sed -ne "s/.*A HREF=\"\([^\/]*\/\)\".*/\1/p")
+		for dir in $(cat ./index.html | sed -ne "/<pre>/,/<\/pre>/s/.*\(A HREF\|a href\)=\"\([^\/\.]*\/\)\".*/\2/p")
 		do
 			echo "# call downloadSite :: $1$dir, $dir"
 			downloadSite "$1$dir" "$dir"
